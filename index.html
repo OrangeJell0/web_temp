@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyword Overlay Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px 0 0 0;
+            background-color: #e9ebee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #2d2d2d;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .keywords-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            width: 100%;
+        }
+
+        .keyword {
+            flex: 1;
+            padding: 10px 15px;
+            background-color: #3A4754;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        .keyword .highlight-streams {
+            color: #3FC6EE;
+        }
+
+        .keyword .highlight-my-city {
+            color: #33CC99;
+        }
+
+        .blank {
+            flex: 2;
+            padding: 10px 15px;
+            background-color: #3A4754;
+            color: #3A4754;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .keyword.bigger {
+            flex: 2;
+        }
+
+        .keyword:hover, .blank:hover {
+            background-color: #4caf50;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        
+        .overlay-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 70%; /* Adjusted width to make it narrower */
+            max-width: 800px; /* Adjusted max-width to make it narrower */
+            text-align: middle;
+            line-height: 1.5;
+            position: relative;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+
+
+        .overlay-content p {
+            font-size: 14px;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        .overlay-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .overlay-content ul li {
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .overlay-content .extra-info {
+            font-size: 40px;
+            color: #333;
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 15px 20px;
+            background-color: transparent;
+            color: #5e5e5e;
+            font-size: 32px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            z-index: 1010;
+        }
+
+        #overlay-image {
+            width: 100%;
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        /* Button Styles */
+        #clickable-btn {
+            background-color: #007BFF;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 30px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #clickable-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #clickable-btn:active {
+            transform: translateY(0);
+            transition: all 0.1s ease;
+        }
+
+        /* Pulse animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        #clickable-btn:hover {
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Click animation */
+        @keyframes click {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(0.97); }
+            100% { transform: scale(1); }
+        }
+
+        #clickable-btn:active {
+            animation: click 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h1>PROJECT:</h1>
+        <section class="keywords-container">
+            <div class="row">
+                <div class="blank" onclick="showOverlay('Blank', '')"></div>
+                <div class="keyword" onclick="showOverlay('Work', 'A project focused on creating new work opportunities through innovative solutions.')">Work</div>
+            </div>
+            <div class="row">
+                <div class="keyword bigger" onclick="showOverlay('Connect', 'A project about connecting communities and bridging gaps using technology and collaboration.')">Connect</div>
+                <div class="keyword" onclick="showOverlay('Recycle', 'Promoting sustainable practices through innovative recycling programs.')">Recycle</div>
+            </div>
+            <div class="row">
+                <div class="keyword" onclick="showOverlay('Play', 'Encouraging creativity and play in urban spaces for better community engagement.')">Play</div>
+                <div class="keyword" onclick="showOverlay('Link', 'Linking people and resources to create impactful change.')">Link</div>
+                <div class="keyword" onclick="showOverlay('Home', 'Creating safe and sustainable homes for everyone.')">Home</div>
+                <div class="keyword" onclick="showOverlay('Earth', 'Protecting our planet through environmental initiatives.')">Earth</div>
+            </div>
+            <div class="row">
+                <div class="keyword" onclick="showOverlay('Pop-Up', 'Temporary setups for impactful projects.')">Pop-Up</div>
+                <div class="keyword" onclick="showOverlay('Health', 'Focusing on health and well-being for communities.')">Health</div>
+                <div class="keyword" onclick="showOverlay('Learn', 'Promoting education and lifelong learning.')">Learn</div>
+            </div>
+            <div class="row">
+                <div class="keyword bigger" onclick="showOverlay('Biosphere+', 'Enhancing our biosphere through innovation.')">Biosphere+</div>
+                <div class="keyword" onclick="showOverlay('Power', 'Sustainable energy solutions for a better future.')">Power</div>
+            </div>
+            <div class="row">
+                <div class="keyword" onclick="showOverlay('Streams', 'Efficient management of water and resources.')"><span class="highlight-streams">Streams</span></div>
+                <div class="keyword" onclick="showOverlay('Extract', 'Innovative ways to extract and reuse resources.')">Extract</div>
+            </div>
+            <div class="row">
+                <div class="blank" onclick="showOverlay('Blank', '')"></div>
+                <div class="keyword" onclick="showOverlay('Fresh', 'Providing fresh and sustainable resources.')">Fresh</div>
+                <div class="keyword" onclick="showOverlay('Biosphere', 'Focusing on preserving and enhancing the biosphere.')">Biosphere</div>
+            </div>
+            <div class="row">
+                <div class="keyword" onclick="showOverlay('Space', 'Reimagining the use of space for the future.')">Space</div>
+                <div class="keyword" onclick="showOverlay('My City', 'Innovative solutions for urban living.')"><span class="highlight-my-city">My City</span></div>
+                <div class="keyword" onclick="showOverlay('Water', 'Ensuring access to clean and safe water.')">Water</div>
+            </div>
+        </section>
+    </main>
+
+    <div class="overlay" id="overlay">
+        <img id="overlay-image" src="" alt="Connect Image" style="display: none;" />
+        <div class="overlay-content">
+            <button class="close-btn" onclick="closeOverlay()">×</button>
+            <p id="overlay-text">A project focused on creating new work opportunities through innovative solutions.</p>
+            <ul id="overlay-list"></ul>
+            <div id="extra-info" class="extra-info"></div>
+        </div>
+    </div>
+
+    <script>
+        function showOverlay(title, text) {
+            let extraContent = '';
+            let extraInfo = '';
+
+            // Adjust overlay width for all overlays
+            const overlayContent = document.querySelector('.overlay-content');
+            overlayContent.style.width = '90%'; // Set width to 90%
+            overlayContent.style.maxWidth = '1200px'; // Set max-width to 1200px
+
+            overlayContent.style.backgroundColor = '#fff'; // Reset the background color
+
+            if (title === 'Work') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/work.png') no-repeat top right;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/circle.png') no-repeat bottom left;
+                            background-size: 600px, 600px;
+                            opacity: 1; /* Transparency for background images only */
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC We know finding meaningful employment is hard.</strong></h3>
+                        <p>By creating partnerships to harmonise skills, verify accreditation, and streamlining employers to potential employees: we can create a network where it’s <strong>easier to find a job that meets your skills.</strong> P:HC connects employers and employees in a transparent way, making it easier to meet safety regulations and decrease illegal and unsafe employment situations.</p>
+                        <p>The changing realm of employment is something that has to be looked at more cohesively. yes, we need to connect people to better-fitting jobs, we also need to invest in fields that eliminate jobs and <strong>funnel the profit back to the people it displaces directly</strong> is the only way we progress equitably. If we as the public don't do this, corporations will and they have no obligation other than taxes to redistribute the wealth of automation and artificial intelligence.</p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Open Roles</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Filled Roles</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Industries On Platform</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                <strong>Workers Rights are Human Rights</strong>- Under the table jobs shouldn't be the only way that you can get employed. At P:HC we plan to work with governments and employers to ease the burden of hiring new employees, we want to create an easy system for regulation and monitoring, so the cost of hiring new people isn't on the worker and their wellbeing.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                There is a job for everyone, but not the right fit- One of the biggest barriers to new workers is skills and compatibility. Every office has their culture and every job has a personality type reinforcing the skills. At P:HC we want to help people develop themselves, so it isn't as hard to <strong>find a job that makes you feel like a superstar.</strong> You do your job every day, so your job should be rewarding and comfortable. By working with leading employers and prospects, we believe that we can develop a way to create the perfect fit, every time.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                In the job market, its all about connections- Feel like you've applied everywhere but no one's got back to you? it sucks. At P:HC we know that half the job postings are mandatory listings and that in a lot of cases it's about who you know. That's because it's easier to connect to someone you know personally than a piece of paper or an application. We think it is your ability and what you bring to the table that should trump familiarity, so by creating more connections to the right jobs and what employers actually look for will <strong>mesh you and your dream role.</strong></p>
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #7D8594; font-weight: bold;">Work</span> = 
+                            <span style="color: #33CC99; font-weight: bold;">Rights</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Culture</span> + 
+                            <span style="color: #0D4F83; font-weight: bold;">Skills</span> 
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+            
+            else if (title === 'Health') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/hand_gear.png') no-repeat center center;
+                            background-size: 500px, 500px;
+                            opacity: 0.1; /* Transparency for background images only */
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/polygon_diag.png') no-repeat center center;
+                            background-size: 500px, 500px;
+                            opacity: 1; /* Transparency for background images only */
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC helping people improve their health and get better should be easy and equitable.</strong></h3>
+                        <p>Hospitals, schools, police, fire, water, hydro, and 311 are all services that make our lives more accessible, safe, and enriching. P:HC looks to streamline institutional practices and services so that everyone can have access to an elevated standard of living and care. P:HC invests in accessible technologies to standardize the level of services available to the public.</p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Holistic Service IntegrationWhy navigate fragmented systems for health, safety, and wellness? At P:HC, we envision a unified platform where services work in harmony, reducing redundancy and increasing efficiency for everyone. Accessible Technologies for All
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Proactive Health Over Reactive CareInvesting in preventive health measures reduces the burden on emergency services and hospitals. By connecting communities with educational resources, wellness programs, and early intervention tools, we can build healthier, more resilient populations.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Technology should bridge gaps, not widen them. We aim to deploy intuitive, accessible tools that empower individuals to connect with services, track their health progress, and receive care when and where they need it.
+                            </p>
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #7D8594; font-weight: bold;">Connect</span> = 
+                            <span style="color: #33CC99; font-weight: bold;">Equity</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Access</span> + 
+                            <span style="color: #0D4F83; font-weight: bold;">Community</span> +
+                            <span style="color: #000000; font-weight: bold;">Ownership</span> 
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Biosphere+') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/bird.png') no-repeat top left;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC we believe that biodiversity flourishes when we do our part; we want to connect the pieces so it’s a breeze.</strong></h3>
+                        <p>Allowing the wild to bounce back is only the first step in recreating the biodiversity lost to human activity. At P:HC, we focus on creating partnerships to record and preserve genetic diversity, develop captive breeding and release programs, and implement genetic regenesis initiatives to repopulate ecosystems suffering from genetic bottlenecks.</p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Preserving Genetic DiversityBiodiversity begins with the genes. P:HC aims to build genetic libraries that ensure a future for threatened species by preserving their DNA and studying traits critical for survival in changing climates.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                 Captive Breeding and Release ProgramsWild populations need a boost. By supporting well-managed captive breeding and carefully planned reintroduction programs, we can give endangered species a second chance to thrive in their natural habitats.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Genetic Regenesis for Ecosystem RestorationEcosystems with reduced genetic diversity are at risk of collapse. P:HC is exploring cutting-edge genetic regenesis techniques to reintroduce diversity into fragile ecosystems, ensuring they are more resilient and self-sustaining.
+                            </p>
+                        </div>
+
+                        <p> At P:HC, we see biodiversity as the foundation of a thriving planet. By investing in innovative solutions and collaborative programs, we can restore what has been lost and ensure a vibrant, biodiverse future for generations to come. Let’s reconnect with nature and bring life back to its fullest. </p>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #0D4F83; font-weight: bold;">Biosphere+</span> = 
+                            <span style="color: #0D4F83; font-weight: bold;">Biodiversity</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Innovation</span> + 
+                            <span style="color: #C8D0D8; font-weight: bold;">Restoration</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Link') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/polygon_down.png') no-repeat center center;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/pipes.png') no-repeat bottom right;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC we think that getting people and goods around is how our lives function.</strong></h3>
+                        <p>Moving people, goods, and products is the underlying foundation of how our world works. P:HC looks to connect transportation networks to be more efficient, cost-effective, and reliable so we move what matters most. Integrating multimodal networks via internet systems that allow for innovative solutions to moving people and items with the least environmental impacts.</p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Multimodal HarmonyWhy depend on just one way to travel or ship when we can combine them all? By integrating bikes, cars, buses, trains, and autonomous vehicles into a seamless network, P:HC envisions a system where transitions are effortless, affordable, and eco-friendly.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Smart Logistics for Smarter CitiesUrban areas face growing challenges with congestion and emissions. Through data-driven systems, P:HC aims to coordinate traffic flow and delivery systems, lowering costs and making urban centers greener and more livable.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Community-Based TransportWe believe in putting communities at the forefront of transportation solutions. Through collaborative efforts, we’ll establish local hubs for shared transportation, reducing isolation and improving overall accessibility.
+                            </p>
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #0D4F83; font-weight: bold;">Link</span> = 
+                            <span style="color: #15648B; font-weight: bold;">Connectivity</span> + 
+                            <span style="color: #33CC99; font-weight: bold;">Efficiency</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Sustainability</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+            
+            else if (title === 'Water') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/polygon_up.png') no-repeat center center;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/waves.png') no-repeat center center;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC: we think that when we're protecting our bodies of water and the life in it, we protect ourselves</strong></h3>
+                        <p>Oceans, Lakes, Rivers and any other body of water are important to the health of the planet. At P: HC, we look at the high impact challenges facing our water: pollution, fish stock collapse and ecosystem degradation. Focusing on point source contamination, sustainable aquatic farming practice and innovate remediation, we hope to accelerate the rate we heal our water sources.</p>
+                        <p>When we look at water, we face many different and complicated issues. Water doesn't follow borders it just flows, so it requires cooperation to properly address the needs of everyone. We need to make water accessible to everyone but who should pay for water, should water have a cost?</p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Water should be a human right - Sure that seems like a given but what does that look like? we think that water conservation should be met with regulation that monitors levels, contaminants, keeps is cheap for people and relatively cost for large users like a corporation to ensure better water equity worldwide.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Contaminants come from somewhere, let's find out where and stop them - Filtering water is one thing, keeping it clean is another. By focusing on where our water is polluted and treating/ stopping contaminates, we clean our most precious resource and keep it safe.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Water brings life, lets bring our planet's oceans back to life - We think that ocean stewardship should be an international cooperative, not a meaningless treaties. By creating and maintaining real fishing monitoring and policing partnerships: we can save the ocean from overfishing and fish stock collapse.
+                            </p>
+                        </div>
+
+                        <p>Rising sea-levels can be an opportunity for change - Terra-forming offers us a chance to perfect something only witnessed in nature, creating biodiverse rivers and estuaries near and around coastal areas that create inland nurseries, revitalise landscapes and provide new ecological employment as well as learning opportunities.</p>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #0D4F83; font-weight: bold;">Water</span> = 
+                            <span style="color: #15648B; font-weight: bold;">Rights</span> + 
+                            <span style="color: #33CC99; font-weight: bold;">Monitoring</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Responsibility</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Home') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/env.png') no-repeat bottom left;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/polygon_diag.png') no-repeat top right;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC we think that everyone deserves a home</strong></h3>
+                        <p>We plan on making getting high-quality housing, easy and affordable for everyone. <strong>Housing is a basic human right.</strong> We don’t believe that needy people deserve any less, so we want to build housing worth living in. Places where people can be proud of calling theirs, places where there aren't wealth based stigmas, but a real community.
+Most cities are facing a housing crisis. Some of the largest and more developed cities in the world are experiencing housing bubbles due to high demand and low stock, this issue can only be fixed through a combination of progressive zoning policy, innovative building practices and a shift in how we manage residential-commercial-employment connectivity to increase the quality of life and opportunity for social growth.</p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                <strong>Open Access to Housing is the most effective way to housing</strong> -  At P:HC we believe homeless is not their problem but a failure of a progressive society, so we aim to fix it. By building homes for the homeless and low-income members of society, we believe that we can give everyone their basic right of life - Shelter.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Creating Inclusive Communities builds better communities- <strong>Public Housing shouldn't separate the rich from the poor,</strong> that only creates further social division. When we create housing plans, we create communities. Communities meant for the diversity of society. Access and inclusion lower the stigma of difference and encourages new neighbours, new social connections, new friends.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Investing in the Future of Building- 3-D printing will make developing land way easier. By partnering with universities, companies and governments, we plan to champion 3-D printing in the housing market and improve the time it which it takes to meet demands of housing our growing population properly.
+                            </p>
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #0D4F83; font-weight: bold;">Home</span> = 
+                            <span style="color: #15648B; font-weight: bold;">Equity</span> + 
+                            <span style="color: #33CC99; font-weight: bold;">Inclusion</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Technology</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+            
+            else if (title === 'Recycle') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/polygon_up.png') no-repeat center center;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC  we think that trash scars our planet for generations, let’s use it to build our future.</h3>
+                        <p>One of humanity’s greatest advancements is our ability to create, but in our progress, we’ve created a huge problem: the disposal of our past items. P:HC looks to recycle our garbage into new uses and new methods for producing more sustainable products. We plan to make using accessible technology a tool for equipping people with the means to design, share and produce innovative things.</p>
+                        <p>We live in an age where there's so many things. We need to make better things worth using, products that are designed better start to end. This means incorporating more recycled materials into our manufacturing and designing for product life after use. developing a policy framework for better products while making product design more accessible, we can make less waste and better use of the things in our lives.</p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Diversion Planning and Training- Recycling is cool, but compositing is better. Unless your city is super progressive, this isn't a common reality. At P:HC, we look to encourage and design composting programs in cities as part of their regular services, but that's not the end of it - public buildings and private-public spaces should composite too, so it's <strong>never a choice between responsibility and convenience.</strong>
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                <strong>Crossover // Project: Water x Project: Recycle = Sustainability</strong> - Connecting our ideas on treating water pollution and recycling infrastructure, we plan to invest in the regional and municipal treatment of waste at the most cost effective scale so that we don't foul the water that we and so many others depend on.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Product Centres- Making 3-D printing stock is one thing, putting it to good use is an opportunity for something more. At P:HC we think that if we coordinate with universities, companies and governments, we can create centres in which the public can <strong>design new products and buy designs from companies to be printed on community machines.</strong> This is the next step in the manufacturing revolution, it should be in every city and every neighbourhood.
+                            </p>
+                        </div>
+
+                        <p><strong>Trash Markets, turning garbage into commodities</strong> - Plastics, metal and other base materials can all be recycled, many places do recycle. At P:HC, we think we should make it better. By localising the production of stock 3-D printing material from recycled trash, we can lower transportation costs, create local jobs, and produce the base material for the next generation of products, without taking from nature unnecessarily.</p>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #0D4F83; font-weight: bold;">Recycle</span> = 
+                            <span style="color: #15648B; font-weight: bold;">Technology</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Transformation</span> + 
+                            <span style="color: #33CC99; font-weight: bold;">Creativity</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Space') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/space.png') no-repeat center left;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC we think that space is the final frontier; let’s explore it together.</strong></h3>
+                        <p>Space offers us a universe of new possibilities, and we believe everyone should be immersed in its wonders. At P:HC, we aim to cultivate a collective love for space and its associated sciences to drive progress on space-related projects. With a shared understanding and passion, we can transform humanity's capabilities and opportunities to explore the unexplored.</p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Expanding Space EducationA fascination with space starts with knowledge. At P:HC, we plan to create accessible educational programs and interactive tools to inspire future scientists, engineers, and explorers. From classrooms to public events, we’ll bring space closer to everyone.Supporting Innovation in Exploration
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                 Human space exploration relies on cutting-edge technologies. By partnering with innovators, we aim to foster advancements in propulsion systems, robotics, and sustainable living solutions that will drive us further into the cosmos.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Building Global CollaborationSpace exploration should unite, not divide. P:HC envisions partnerships that transcend borders, bringing together countries, organizations, and communities to collaborate on projects that push the limits of what’s possible.
+                            </p>
+                        </div>
+
+                        <p> At P:HC, we dream of a world where space isn’t just for astronauts—it’s for everyone. Together, we can unlock the mysteries of the cosmos and chart a brighter future for humanity. Let’s take the next giant leap, together. </p>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #C8D0D8; font-weight: bold;">Space</span> = 
+                            <span style="color: #15648B; font-weight: bold;">Discovery</span> + 
+                            <span style="color: #0D4F83; font-weight: bold;">Education</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Collaboration</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Biosphere') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/bio_forest.png') no-repeat center right;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC we believe rebuilding forests impacts our entire planet; we strive to make them thrive again.</strong></h3>
+                        <p>Forests are the lungs of our planet, playing a critical role in maintaining ecological balance. However, climate change and deforestation threaten the collapse of this vital system. At P:HC, we are committed to forging partnerships with governments, NGOs, and local communities to diversify tree stock, replenish degraded ecosystems, and selectively breed climate-resilient forest species.</p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Climate-Resilient ForestsThe changing climate calls for innovation in forestry. By selectively breeding and planting tree species that can withstand extreme weather and shifting climates, we can help forests thrive in the face of uncertainty.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Diverse Forests for a Resilient FutureMonoculture forests are fragile and vulnerable to disease and climate change. P:HC supports initiatives to plant diverse tree species, ensuring ecosystems are more adaptable and sustainable.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Rewilding Degraded LandsReplenishing degraded ecosystems goes beyond planting trees—it involves restoring the biodiversity of entire habitats. At P:HC, we aim to develop rewilding projects that bring back native species and strengthen the natural balance.
+                            </p>
+                        </div>
+
+                        <p> At P:HC, we see forests not just as trees but as thriving ecosystems critical to life on Earth. Together, we can rebuild our biosphere and ensure it continues to sustain future generations. Join us in creating a greener, healthier planet. </p>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #33CC99; font-weight: bold;">Biosphere</span> = 
+                            <span style="color: #3FC6EE; font-weight: bold;">Restoration</span> + 
+                            <span style="color: #15648B; font-weight: bold;">Diversity</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Earth') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/rectangle.png') no-repeat center center;
+                            background-size: 700px, 700px;
+   
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC our earth is precious; we should work to make it safe, abundant, and productive.</strong></h3>
+                        <p>In many developed countries, past industrial land uses have contaminated soil, making land unfit for human activity. These lands, typically called “brownfields,” are costly endeavors to remediate. At P:HC, we explore innovative hybrid methods to develop cleaning techniques so that land can be reused safely.</p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Hybrid Remediation MethodsTraditional soil cleaning techniques are slow and expensive. By integrating bioremediation with advanced chemical and mechanical solutions, P:HC aims to create faster, more cost-effective processes to restore land for safe human use.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                <strong>Turning Wastelands into Community Assets</strong> Brownfields don’t have to be abandoned forever. Once remediated, these spaces can be repurposed into parks, housing, urban farms, or renewable energy sites—bringing value back to the community.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Collaborative Clean-Up InitiativesLand restoration is a shared responsibility. By partnering with local governments, businesses, and residents, P:HC can facilitate collective efforts to revitalize contaminated spaces for the benefit of all.
+                            </p>
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #33CC99; font-weight: bold;">Earth</span> = 
+                            <span style="color: #3FC6EE; font-weight: bold;">Restoration</span> + 
+                            <span style="color: #15648B; font-weight: bold;">Innovation</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Pop-Up') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/pop_up.png') no-repeat top left;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/circle.png') no-repeat bottom right;
+                            background-size: 600px, 600px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC We think that people love to be around other people... most times lol.</strong></h3>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Impact Models</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">3rd Spaces</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <p>We’re a social species. In Project: Pop-Up we look at transforming underused public spaces into cool environments for connection. Ranging from places where people can enjoy each other’s company, learn new things, connect to cool local initiatives and experience the work of local groups, <strong>P:HC wants to connect you to the spaces you live, work and play.</strong></p>
+                        <p>In tough social times coming together shouldn't make us feel vulnerable, it should make use feel safe. Despite the global tension, we at P:HC are committed to creating community through the use of space and shared ideas. Some of the barriers to developing this community sense are land ownership, time constraints, coordination and awareness. Bringing communities together can create the opportunity for dynamic connections and social enrichment.</p>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                <strong>Empty Space?</strong> You mean Cool Opportunity - there's lot's of empty spots in our communities that could be home to little patches of magic, let's make it.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                We at P:HC thinks that novel uses of <strong>spaces ignite our imagination and creativity</strong> from farmers markets, community farming co-ops, craft markets, restaurant pop-ups, store pop-ups and even pop-up dance parties, connecting to those underused spaces can create new experiences that we didn't expect and that brighten up our days. Let's make it happen together, all the time.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Let's put the <strong>Unity back into Community</strong>- blight and underused spaces affect everyone in a community, at P:HC we want to empower communities to reclaim these spaces and transform them into community hubs. the intersection of community, collaboration and recreation that give an area a sense of identity, and the to residents, a sense of belonging.
+                            </p>
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #717273; font-weight: bold;">Pop-Up</span> = 
+                            <span style="color: #33CC99; font-weight: bold;">Space</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Space</span> + 
+                            <span style="color: #0D4F83; font-weight: bold;">Creativity</span> +
+                            <span style="color: #717273; font-weight: bold;">Oraganizatoin</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Play') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/circle.png') no-repeat top left;
+                            background-size: 600px, 600px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/baseball.png') no-repeat center right;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC We think that part of a happy life, is being active.</h3>
+                        <p>By connecting the best recreation programs to the public, we make is easier to enjoy the outdoors, learn new skills and uncover new passions. P:HC helps empower under-appreciated recreational organisations and makes it super easy to embrace something you think is interesting, hopefully, it'll set you on a path to a deeper appreciation and eventual mastery.</p>
+                        <p>In the shifting economy, developing employment and a focus on <strong>human skills can help bridge the social transition</strong>. At P:HC, we think that recreation shouldn't be a luxury but a part of personal development and an enriching life, by connecting, coordinating and educating, we think that a healthier life is within reach for everyone.</p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Options To Play</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Active Sites</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                You need to <strong>design where you play</strong>- Cities are embracing the changing habits of people and emerging recreational trends, but they need to connect to the public in order to design the spaces that everyone can enjoy. At P:HC, we want to facilitate the conversation in a way that people aren't just commenting on new installations, they're creating them. The public is the ones using it, so why shouldn't they design it?
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Organised sports <strong>should be a community event</strong>- Recreational and Amateur sports leagues are important in fostering a healthy life and a long appreciation for sport, but if your not careful they can be scams. So at P:HC, we believe recreation should be a community created and controlled activity, by sharing information we believe can make a fun experience easy. All the while inspiring the future athletic greats to pursue their sport.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Active jobs, active futures- For young people <strong>employment can be hard.</strong> So At P:HC we see recreation as an opportunity to develop leadership, responsibility and a team mentality while offering young people new job opportunities in their neighbourhoods. win-win-win!
+                            </p>
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #7D8594; font-weight: bold;">Play</span> = 
+                            <span style="color: #33CC99; font-weight: bold;">Community</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Passion</span> + 
+                            <span style="color: #15648B; font-weight: bold;">Opportunity</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Fresh') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/circle.png') no-repeat center center;
+                            background-size: 600px, 600px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/veg.png') no-repeat bottom right;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC We think that Real food, makes a Real difference in every life.</h3>
+                        <p>At P: HC, we truly believe: <strong>We are what we eat.</strong> We want to connect users to fresh produce and products made locally. We want to empower local producers to grow with more control, care and insight into sustainable practices and systems, so every Human City becomes food secure and abundance-oriented.</p>
+                        <p>Big Agriculture and Fake Organics are run rampant with food production and are not really accountable to the environment and our health. We need to make local and real organic more affordable. we need to shift the conversation to science-based regulating and consumer protection practices that deliver everyone with the best food possible <strong>so they can live the healthiest lives possible!</strong></p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Farm Lots</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Pound Of Food Shared</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Connected Consumers</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Seeds of our Future- Genetic diversity is important for our crops. Developing new breeds of crops through natural land racing helps farmers adapt to climate change and produce healthier, tastier food. At P:HC we want to help farmers connect, share and develop new seeds; so they have <strong>more options in their farming and we have more variety in our food.</strong>
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Organised sports <strong>should be a community event</strong>- Recreational and Amateur sports leagues are important in fostering a healthy life and a long appreciation for sport, but if your not careful they can be scams. So at P:HC, we believe recreation should be a community created and controlled activity, by sharing information we believe can make a fun experience easy. All the while inspiring the future athletic greats to pursue their sport.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Active jobs, active futures- For young people <strong>employment can be hard.</strong> So At P:HC we see recreation as an opportunity to develop leadership, responsibility and a team mentality while offering young people new job opportunities in their neighbourhoods. win-win-win!
+                            </p>
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #7D8594; font-weight: bold;">Fresh</span> = 
+                            <span style="color: #33CC99; font-weight: bold;">Community</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Food</span> + 
+                            <span style="color: #15648B; font-weight: bold;">Conversation</span> +
+                            <span style="color: #0D4F83; font-weight: bold;">Sharing</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Power') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/circle.png') no-repeat bottom center;
+                            background-size: 600px, 600px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC We think that electricity powers our lives, but it shouldn’t cost us our planet.</strong></h3>
+                        <p>At P: HC, we think <strong>our future is tied directly to our ability to convert, move, store and use energy</strong>.  By investing in smart grids and a comprehensive clean renewable electricity spectrum, we hope to make it a reality for everyday people to take energy independence into their own hands.</p>
+                        <p>Our world runs on energy and some of the major barriers to shifting out of the old tired fossil fuel paradigm is infrastructure. The world has a deeply ingrained liquid energy transportation system, old and inefficient electricity grids and a transportation systems anchored on internal combustion engines. We made our world around an energy source that's unsustainable, meaning we invested in infrastructure that all has to be replaced. <strong>We should take this shift as an attempt to make energy more equitable.</strong></p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Watts Produces</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Watts Shared</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Communities Connected</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Good Investments are made once and payback constantly - Since we don't operate for a profit we can use the same profitable model used in the public sector. Financing green energy installations then using the profit to help more people convert to green energy means it not only helps the environment, it helps people <strong>attain energy independence</strong>
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                <strong>Financing Green Energy shouldn't be an arm and leg</strong> - converting to green energy can be expensive for some, at P:HC we plan to coordinate and back local resources and community to make green installations more cost efficient and attractive to the average person.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                More Green Options = More Freedom - At P:HC, we think the renewables should be made accessible and diverse, solar energy isn't going to solve all our needs but developing an array of renewable energy choices will. By investing in green energy options, we hope to lower the cost while passing on the profit of the new energy frontier to those that can't afford to <strong>convert their homes, everywhere to accelerate energy system turnover.</strong>
+                            </p>
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #7D8594; font-weight: bold;">Power</span> = 
+                            <span style="color: #33CC99; font-weight: bold;">Energy</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Community</span> + 
+                            <span style="color: #15648B; font-weight: bold;">Sharing</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Connect') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/connect.png') no-repeat top left;
+                            background-size: 600px, 600px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/circle.png') no-repeat bottom right;
+                            background-size: 600px, 600px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC we think that access to the internet should be a right.</strong></h3>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Impact Models</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Workers</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users Connected</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <p>At Project: Human City,  we do our best to integrate affordable, free internet into all of our land development, public outreach and services. So we can all connect easier and more frequently. In addition, we want to make the internet <strong>more accessible as a matter of law</strong>, so we plan to design policies that reinforce our commitment to this social right.</p>
+                        <p>Access to the internet is a complex infrastructure and social issue, but given its ability the internet has to share information and connect communities, we at P:HC think that partnering with the public to design and create locally owned internet connections can help empower people everywhere and make the internet an affordable social asset for everyone.</p>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                <strong>Net Neutrality</strong> is the Future of a free society - In our lives, the internet will only become more and more important, so we should keep it a level playing field for everyone. At P:HC we want to design and promote policies that integrate Net Neutrality into the same regard as Human Rights and Base social construction. This seems odd but it's being proactive, the more our lives are on the internet, the more free access should be expected and protected.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                <strong>Free Internet</strong> is a scam - Yeah, free internet is awesome but trading your data for it isn't. So At P:HC we will direct our funding to offer free Internet to those who need it and charging just to cover it from those that can. No one should be inconvenienced and have to go out of their way to access free internet, it says your time isn't as valuable because you can't afford international et access. We don't believe this, we refute this prospect and we say "let them have wifi!"
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                <strong>Public Utilities</strong> make society fair- Roads connect people and goods, bridges help us overcome nature, the internet does all that and more. At P:HC, we believe that we should make the internet a public utility, by partnering with communities to build their own internet infrastructure and make access more affordable to the public.
+                            </p>
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #717273; font-weight: bold;">Connect</span> = 
+                            <span style="color: #33CC99; font-weight: bold;">Equity</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Access</span> + 
+                            <span style="color: #0D4F83; font-weight: bold;">Community</span> +
+                            <span style="color: #000000; font-weight: bold;">Ownership</span> 
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Learn') {
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/circle.png') no-repeat top right;
+                            background-size: 500px, 500px;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/learn.png') no-repeat bottom left;
+                            background-size: 600px, 600px;
+                            opacity: 1; /* Transparency for background images only */
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC We think that Education is the core of our society.</strong></h3>
+                        <p>By making learning fun, adaptive, and flexible, we empower students to become lifelong learners. Project: Learn looks to make education accessible and transferable. We want to <strong>make the world into a classroom</strong>, and connecting learners from across the planet on an equal free platform, so we can accelerate local knowledge, sharing and access.</p>
+                        <p>We look to make our education systems better we face a lot of issues like children without access to schools, different education starting points for students, language gaps and access to educational resources to ensure success. We need to make our schools the <strong>perfect place to address all the barriers</strong> to accessing quality education, regardless of where the school is.</p>
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Courses</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Education Partners</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Learners</span>
+                            </div>
+                        </div>
+
+                        
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center left;">
+                                All schools are essentially the same, every child isn't - Technology can help make proficiency easier to attain while monitoring growth <strong>combining two fundamental aspects of pedagogical methods</strong>. At P:HC we think that the pedagogical community can reform the measure of progress by using technology to make sure no kid is left behind, instead of just left to survive.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center right;">
+                                <strong>Practical tech in schools pays off<strong> - We've seen that tech in school doesn't really help kids learn better. At P:HC we're developing new ways to integrate technology into the classroom that doesn't distract or detract from the experience.
+                            </p>
+                                
+                        </div>
+
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                learning is a framework of experience, let's build universal methods - Regardless of what language you know, we all learn in the same ways. by designing learning curriculum's that focus on the types of intelligence and integrate a flexible regime, teachers can share better strategies and students can learn in their natural neural programming strengths. Together it makes for a love of learning and <strong>an universal classroom formula.</strong>
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Creating simple methodologies for checking proficiency and accumulated knowledge can help assess and address the gaps in education caused by conflicts and set a direction for fulfilling the temporary disability to continue the education of children worldwide. at P:HC we are committed to giving every child the opportunity to learn in a safe environment <strong>that fosters their potential and inspire their lives.</strong>
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Project: Learn is part of a composite planning strategy - by raising the quality of life and access to economic opportunity through our other projects, we seek to eliminate the barriers for children seeking an education. When a family has enough resources it can make it easier for children to access education, which will only further benefit the child, family and <strong>community as a whole</strong> - it's forward planning.
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #7D8594; font-weight: bold;">Learn</span> = 
+                            <span style="color: #33CC99; font-weight: bold;">Technology</span> + 
+                            <span style="color: #3FC6EE; font-weight: bold;">Focus</span> + 
+                            <span style="color: #0D4F83; font-weight: bold;">Access</span> 
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else if (title === 'Extract') {
+                overlayContent.style.backgroundColor = '#b0cabb';
+                extraContent = `
+                    <div style="
+                        position: relative;
+                        text-align: center; 
+                        font-size: 16px; 
+                        color: #333; 
+                        padding: 50px;
+                        border-radius: 15px;">
+                        <div style="
+                            position: absolute;
+                            top: 0; 
+                            left: 0; 
+                            width: 100%; 
+                            height: 100%; 
+                            background: url('./images/extract.png') no-repeat top right;
+                            background-size: 600px, 600px;
+                            opacity: 0.5;
+                            z-index:0;
+                            border-radius: 15px;
+                            pointer-events: none;"></div>
+
+                        <h3><strong>@P:HC we know that taking resources from the environment is impactful; we want to make sure it’s done right and equitably.</strong></h3>
+                        <p>Mineral and resource extraction fuels our collective economy and way of life. P:HC is committed to fair, equitable, and transparent environmental assessments and tracking of large-scale extraction projects. By working together, we can hold corporations accountable to affected communities through more streamlined reporting and robust environmental assessment (EA) checks.</p>
+                        <p>Our world runs on energy and some of the major barriers to shifting out of the old tired fossil fuel paradigm is infrastructure. The world has a deeply ingrained liquid energy transportation system, old and inefficient electricity grids and a transportation systems anchored on internal combustion engines. We made our world around an energy source that's unsustainable, meaning we invested in infrastructure that all has to be replaced. <strong>We should take this shift as an attempt to make energy more equitable.</strong></p>
+                        <div style="display: flex; justify-content: center; align-items: center; font-size: 60px; font-weight: bold; color: #333;">
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center; margin-left: 100px; margin-right: 100px;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                            <div style="text-align: center;">
+                                10+<br>
+                                <span style="font-size: 18px; margin-top: -5px; display: block;">Users</span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 20px;">Some Ideas We're Thinking About:</h3>
+                        <p>At P:HC, we believe extraction can be done responsibly. By prioritizing fairness, transparency, and sustainability, we can ensure that resource use benefits everyone—not just a select few. Join us in redefining how we extract and share the earth’s resources.</p>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; justify-content: center;">
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Transparent Reporting SystemsCommunities have the right to know how resource extraction impacts their land and lives. At P:HC, we’re developing clear, accessible tools that provide real-time data on environmental effects and corporate compliance with local regulations.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Equity in ExtractionResource-rich areas often see little return for the wealth extracted from their land. P:HC seeks to create frameworks that ensure affected communities benefit through job creation, infrastructure investments, and equitable revenue sharing.
+                            </p>
+                            <p style="flex: 1; min-width: 300px; text-align: center;">
+                                Accountable Environmental AssessmentsEnvironmental assessments are often lengthy and complex, leaving room for oversights. By streamlining the EA process with advanced monitoring tools and independent audits, P:HC aims to ensure that projects meet rigorous environmental and social standards.
+                            </p>
+                        </div>
+
+                        <div style="text-align: center; font-size: 24px; font-weight: normal; color: #333; margin-top: 20px;">
+                            <span style="font-weight: bold;">Project:</span> 
+                            <span style="color: #33CC99; font-weight: bold;">Extract</span> = 
+                            <span style="color: #3FC6EE; font-weight: bold;">Accountability</span> + 
+                            <span style="color: #15648B; font-weight: bold;">Equity</span> + 
+                            <span style="color: #C8D0D8; font-weight: bold;">Sustainability</span>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button id="clickable-btn" style="background-color: #007BFF; color: white; font-size: 18px; font-weight: bold; padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;">
+                                Connect On Co-Quest
+                            </button>
+                        </div>
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
+            }
+
+            else {
+                extraContent = text;
+                document.getElementById('overlay-image').style.display = 'none'; // Hide image for other overlays
+            }
+
+            document.getElementById('overlay-text').innerHTML = extraContent;
+            document.getElementById('extra-info').textContent = extraInfo;
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        function closeOverlay() {
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Add event listener for the button
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('clickable-btn').addEventListener('click', function () {
+                alert('Connecting to Co-Quest...'); // Replace this with your desired functionality
+                // You can redirect to another page or trigger an API call here
+            });
+        });
+    </script>
+</body>
+</html>
