@@ -8,7 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px 0 0 0;
+            padding: 0;
             background-color: #e9ebee;
             display: flex;
             flex-direction: column;
@@ -17,23 +17,28 @@
         }
 
         .container {
-            width: 100%;
-            max-width: 400px;
-            padding: 0 10px;
+            width: 40%; /* Full width */
+            max-width: none; /* Remove max-width constraint */
+            padding: 20px; /* Add some padding */
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Full height */
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 32px; /* Larger font size */
             color: #2d2d2d;
-            margin-bottom: 10px;
+            margin-bottom: 20px; /* More spacing */
             text-align: center;
         }
 
         .keywords-container {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 10px; /* Increase gap between rows */
             width: 100%;
             align-items: center;
         }
@@ -41,21 +46,21 @@
         .row {
             display: flex;
             justify-content: center;
-            gap: 5px;
+            gap: 10px; /* Increase gap between buttons */
             width: 100%;
         }
 
         .keyword {
             flex: 1;
-            padding: 10px 15px;
+            padding: 20px 25px; /* Larger padding for bigger buttons */
             background-color: #3A4754;
             color: #fff;
-            border-radius: 5px;
+            border-radius: 10px; /* Slightly larger border radius */
             cursor: pointer;
             text-align: center;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 14px;
+            font-size: 18px; /* Larger font size */
         }
 
         .keyword .highlight-streams {
@@ -68,10 +73,10 @@
 
         .blank {
             flex: 2;
-            padding: 10px 15px;
+            padding: 20px 25px; /* Larger padding for bigger buttons */
             background-color: #3A4754;
             color: #3A4754;
-            border-radius: 5px;
+            border-radius: 10px; /* Slightly larger border radius */
             cursor: pointer;
         }
 
@@ -206,6 +211,8 @@
         #clickable-btn:active {
             animation: click 0.3s ease;
         }
+
+        
     </style>
 </head>
 <body>
@@ -1623,6 +1630,138 @@ Most cities are facing a housing crisis. Some of the largest and more developed 
                 extraInfo = ''; // No additional info
                 document.getElementById('overlay-image').style.display = 'none'; // Hide image for Connect
             }
+            
+            else if (title === 'My City') {
+                overlayContent.style.backgroundColor = '#b0cabb'; // Light green background
+                extraContent = `
+                    <h2 style="
+                        font-size: 36px; 
+                        color: green;
+                        position: absolute;
+                        top: 20px;
+                        left: 20px;
+                    ">MY CITY</h2>
+                    <div id="main-textbox" style="
+                        background-color: #fff; 
+                        padding: 10px;
+                        border-radius: 50px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        width: 10%;
+                        text-align: center;
+                        font-size: 14px;
+                        color: #555;
+                        margin: 80px auto 20px auto; /* Adjust margin to fit under the 'My City' header */
+                        cursor: pointer;
+                    " onclick="showAdditionalTextboxes()">
+                        <h3 style="margin: 0;">What we offer cities:</h3>
+                    </div>
+                    <div id="additional-textboxes" style="margin-top: 20px;">
+                        <!-- New textboxes will appear here -->
+                    </div>
+                    <div style="
+                        display: flex; 
+                        justify-content: space-between; /* Spreads the graphs across the page */
+                        align-items: flex-end; 
+                        z-index: 5;
+                        padding: 20px 0;
+                        gap: 15px; /* Reduces the gap between the graphs */
+                        margin: 0 auto;
+                        width: 90%; /* Make the graph container wider */
+                    ">
+                        ${[...Array(9)].map(() => {
+                            // Random height between 100px and 600px
+                            const randomHeight = Math.floor(Math.random() * 500) + 100;
+                            return `
+                                <div style="
+                                    background-color: lightgrey;
+                                    width: 80px;
+                                    height: ${randomHeight}px;
+                                    border-radius: 50px 50px 0 0;
+                                    position: relative;
+                                    transition: transform 0.3s ease, background-color 0.3s ease;
+                                    cursor: pointer;
+                                " onmouseover="this.style.transform='scale(1.05)'; this.style.backgroundColor='#4caf50';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='lightgrey';">
+                                    <div style="
+                                        position: absolute;
+                                        top: -30px;
+                                        left: 50%;
+                                        transform: translateX(-50%);
+                                        font-size: 14px;
+                                        color: #333;
+                                        font-weight: bold;
+                                        opacity: 0;
+                                        transition: opacity 0.3s ease;
+                                    ">${randomHeight}px</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide overlay
+            }
+
+            else if (title === 'Streams') {
+                overlayContent.style.backgroundColor = '#e0f7fa'; // Light blue background
+                const graphWidths = [1000, 900, 800, 700, 600, 500, 300];
+                const graphTexts = [
+                    "What are Projects? Projects are how we organize the ideas that can change our world. All the projects that P:HC creates in some way accomplishes 1 or more of our 10 Year Project Goals. We divide our goals as separate target area to help focus the core element of change needed but we realize to be effective every project should be interconnected. We want our solutions mimic the interconnection of our lives and the environment, because that's the only way we really create progress.",
+                    "Projects can be one of two things: P: HC’s independent idea initiatives or Collaborative action with our Cityzens and outside entities Projects can take any form:",
+                    "the creation of new social programs,",
+                    "the creation collectively owned and operated businesses We deliver project in participating cities through our MyCityInitiative",
+                    "the physical creation of new public spaces and amenities,",
+                    "the creation of social policy,",
+                    "new industry collaboration frameworks"
+                ];
+                extraContent = `
+                    <h2 style="
+                        font-size: 36px; 
+                        color: #33ccff;
+                        position: absolute;
+                        top: 20px;
+                        left: 20px;
+                    ">STREAMS</h2>
+                    <div style="
+                        position: relative;
+                        top: 80px; /* Adjust the position to be below the title */
+                        display: flex;
+                        flex-direction: column;
+                        width: 90%; /* Adjust width */
+                        height: calc(100vh - 160px); /* Full height minus the space for the title and some padding */
+                        padding: 20px;
+                        gap: 15px; /* Space between the graphs */
+                        overflow: hidden; /* Prevent scrolling */
+                    ">
+                        ${graphWidths.map((width, index) => `
+                            <div class="graph-bar" style="
+                                background-color: #fff; /* White graphs */
+                                width: 100px; /* Initial width */
+                                height: 80px;
+                                border-radius: 0 50px 50px 0;
+                                margin-bottom: 15px;
+                                transition: width 0.5s ease;
+                                z-index: 5; /* Ensure graphs are behind the textboxes */
+                                cursor: pointer;
+                                position: relative;
+                                overflow: hidden;
+                            " onclick="toggleGraph(this, ${width})" data-expanded="false">
+                                <div class="graph-label" style="
+                                    position: absolute;
+                                    left: 20px;
+                                    font-size: 14px;
+                                    color: #333;
+                                    opacity: 0;
+                                    white-space: nowrap;
+                                    transition: opacity 0.5s ease;
+                                ">${graphTexts[index]}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                extraInfo = ''; // No additional info
+                document.getElementById('overlay-image').style.display = 'none'; // Hide overlay
+            }
 
             else {
                 extraContent = text;
@@ -1637,6 +1776,7 @@ Most cities are facing a housing crisis. Some of the largest and more developed 
         function closeOverlay() {
             document.getElementById('overlay').style.display = 'none';
         }
+        
 
         // Add event listener for the button
         document.addEventListener('DOMContentLoaded', function () {
@@ -1645,6 +1785,64 @@ Most cities are facing a housing crisis. Some of the largest and more developed 
                 // You can redirect to another page or trigger an API call here
             });
         });
+
+
+        function showAdditionalTextboxes() {
+            const additionalContainer = document.getElementById('additional-textboxes');
+    
+            // Check if textboxes already exist
+            if (additionalContainer.children.length > 0) {
+                // Remove all existing textboxes
+                while (additionalContainer.firstChild) {
+                    additionalContainer.removeChild(additionalContainer.firstChild);
+                }
+            } else {
+                // Add 5 new text boxes with random non-overlapping positions
+                const usedPositions = [];
+                for (let i = 0; i < 5; i++) {
+                    let position;
+                    do {
+                        const top = Math.random() * 80;
+                        const left = Math.random() * 80;
+                        position = { top, left };
+                    } while (usedPositions.some(pos => Math.abs(pos.top - position.top) < 10 && Math.abs(pos.left - position.left) < 10));
+            
+                    usedPositions.push(position);
+
+                    const newTextbox = document.createElement('div');
+                    newTextbox.style.cssText = `
+                        background-color: #fff; 
+                        padding: 10px;
+                        border-radius: 50px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        width: 10%;
+                        text-align: center;
+                        font-size: 14px;
+                        color: #555;
+                        position: absolute;
+                        top: ${position.top}%;
+                        left: ${position.left}%;
+                        z-index: 10; /* Ensure textboxes are above the graphs */
+                    `;
+                    newTextbox.innerHTML = `<h3>Additional Info ${i + 1}</h3>`;
+                    additionalContainer.appendChild(newTextbox);
+                }
+            }
+        }
+        
+        function toggleGraph(element, width) {
+            const isExpanded = element.getAttribute('data-expanded') === 'true';
+            const label = element.querySelector('.graph-label');
+            if (isExpanded) {
+                element.style.width = '100px';
+                label.style.opacity = 0;
+                element.setAttribute('data-expanded', 'false');
+            } else {
+                element.style.width = `${width}px`;
+                label.style.opacity = 1;
+                element.setAttribute('data-expanded', 'true');
+            }
+        }
     </script>
 </body>
 </html>
